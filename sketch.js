@@ -150,10 +150,24 @@ function draw() {
   }
 
   //add text
-  fill(255); // Set the fill color to white
-    textSize(32); // Set the text size
-    textAlign(CENTER); // Set the text alignment to center
-    text("Your Text Here", width / 2, height / 2); // Display the text in the center of the canvas
+  fill(255); // color
+    textSize(36); 
+    textAlign(CENTER); // alignment
+    text("Welcome!", windowWidth/5, height / 4); // positioning
+    textSize(32);
+    text("How does this work?", windowWidth/5, height / 3.5);
+    text("1. Place your head fully inside the box", windowWidth/5, height / 3.2);
+    text("2. Answer the question by speaking freely", windowWidth/5, height / 3.0);
+    text("3. Continue until you are satisfied with your experience", windowWidth/5, height / 2.8);
+
+    textSize(36);
+    text("Use these voice commands to navigate the interface", windowWidth/5, height / 2.5);
+
+    textSize(32);
+    text("Say 'reset' to clear your answer and restart", windowWidth/5, height / 2.3);
+    text("Say 'submit' to submit your answer and view other answers", windowWidth/5, height / 2.1);
+    text("Say 'next' to move on to a new question", windowWidth/5, height / 1.8);
+    
 }
 
 
@@ -216,13 +230,16 @@ function badVibes() {
 
 function setupVideo() {
     video = createCapture(VIDEO);
-    video.size(windowWidth/2, windowHeight/2);
+    video.size(windowWidth/2.5, windowHeight/2.5);
     // video.size(1000, 562);
     video.hide();
 
-    videoX = windowWidth/2;
-    videoY = windowHeight/2;
+    videoX = (windowWidth - video.width) / 2;
+    videoY = (windowHeight - video.height) / 2;
 
+    // Center for ipad pro
+    videoX = (1024 - video.width) / 2; // width ipad pro
+    videoY = (1366 - video.height) / 2; // height ipad pro
 }
 
 // function setupCommentButton() {
@@ -248,8 +265,8 @@ function setupVideo() {
 function setupSmileQuestionSpan() {
     // Question above add comment button - cycles through array
     smileQuestionSpan = createSpan(initialQuestions[currentQuestionIndex].question);
-    smileQuestionSpanX = windowWidth/2;
-    smileQuestionSpanY = windowHeight - videoY + 150;
+    smileQuestionSpanX = videoX/2;
+    smileQuestionSpanY = windowHeight - videoY + 20;
     smileQuestionSpan.position(smileQuestionSpanX, smileQuestionSpanY);
     smileQuestionSpan.id("smileQuestionSpan");
   }
