@@ -90,6 +90,7 @@ let currentQuestionIndex = 0; // Keeps track of the current question index
 function setup() {
     canvas = createCanvas(windowWidth, windowHeight);
 
+
     // // div parent to position in front of bg image
     // canvas.parent('sketch-holder');
 
@@ -148,9 +149,13 @@ function draw() {
 
   }
 
-
-  
+  //add text
+  fill(255); // Set the fill color to white
+    textSize(32); // Set the text size
+    textAlign(CENTER); // Set the text alignment to center
+    text("Your Text Here", width / 2, height / 2); // Display the text in the center of the canvas
 }
+
 
 
 
@@ -211,12 +216,12 @@ function badVibes() {
 
 function setupVideo() {
     video = createCapture(VIDEO);
-    video.size(windowWidth/2.5, windowHeight/2.5);
+    video.size(windowWidth/2, windowHeight/2);
     // video.size(1000, 562);
     video.hide();
 
-    videoX = (windowWidth - video.width) / 2
-    videoY = (windowHeight - video.height) / 2
+    videoX = windowWidth/2;
+    videoY = windowHeight/2;
 
 }
 
@@ -243,7 +248,7 @@ function setupVideo() {
 function setupSmileQuestionSpan() {
     // Question above add comment button - cycles through array
     smileQuestionSpan = createSpan(initialQuestions[currentQuestionIndex].question);
-    smileQuestionSpanX = videoX/2;
+    smileQuestionSpanX = windowWidth/2;
     smileQuestionSpanY = windowHeight - videoY + 150;
     smileQuestionSpan.position(smileQuestionSpanX, smileQuestionSpanY);
     smileQuestionSpan.id("smileQuestionSpan");
