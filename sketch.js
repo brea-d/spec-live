@@ -266,7 +266,7 @@ function setupSmileQuestionSpan() {
     // Question above add comment button - cycles through array
     smileQuestionSpan = createSpan(initialQuestions[currentQuestionIndex].question);
     smileQuestionSpanX = videoX/2;
-    smileQuestionSpanY = windowHeight - videoY + 20;
+    smileQuestionSpanY = windowHeight - videoY + 60;
     smileQuestionSpan.position(smileQuestionSpanX, smileQuestionSpanY);
     smileQuestionSpan.id("smileQuestionSpan");
   }
