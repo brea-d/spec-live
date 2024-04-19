@@ -99,7 +99,6 @@ function setup() {
     canvas = createCanvas(windowWidth, windowHeight);
 
 
-    // // div parent to position in front of bg image
     // canvas.parent('sketch-holder');
 
     setupVideo();
@@ -199,6 +198,7 @@ function goodVibes() {
     
 
 
+
     document.getElementById('smileQuestionAnswersField').style.display = 'block';
     document.getElementById('smileQuestionAnswersFieldHeader').style.display = 'block';
     // document.getElementById('resetButton').style.display = 'block';
@@ -250,31 +250,13 @@ function setupVideo() {
     video.style('transform', 'translate(-50%, -50%)');
 }
 
-// function setupCommentButton() {
-//     // Add comment button centered below video
-//     addCommentButton = createButton("Submit");
-//     addCommentButtonX = videoX * 1.5;
-//     addCommentButtonY = videoY + video.height + 100;
-//     addCommentButton.position(addCommentButtonX, addCommentButtonY);
-//     addCommentButton.mouseClicked(addCommentHandler);
-//     addCommentButton.id("addCommentButton");
-// }
-
-// function setupResetButton() {
-//     // Reset button centered below video
-//     resetButton = createButton("Reset");
-//     resetButtonX = addCommentButtonX;
-//     resetButtonY = addCommentButtonY;
-//     resetButton.position(resetButtonX, resetButtonY);
-//     resetButton.mouseClicked(resetHandler);
-//     resetButton.id("resetButton");
-// }
 
 function setupSmileQuestionSpan() {
     // Question - cycles through array
     smileQuestionSpan = createSpan(initialQuestions[currentQuestionIndex].question);
     smileQuestionSpanX = (windowWidth - smileQuestionSpan.width) / 2;
-    smileQuestionSpanY = (windowHeight - smileQuestionSpan.height) / 2 + (videoY);
+    smileQuestionSpanY = videoY + video.height + 20; // 20 pixels below the video
+
     smileQuestionSpan.position(smileQuestionSpanX, smileQuestionSpanY);
 
     // align to middle

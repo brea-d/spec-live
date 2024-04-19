@@ -180,6 +180,15 @@ h1 {
 }
 
 
+/* center on every device */
+#smileQuestionAnswersFieldHeader,
+#smileQuestionAnswersField,
+#lastQuestionAnswerFieldHeader,
+#lastQuestionAnswerField {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 /* Hide the white border plus scrollbars
 body {
