@@ -156,25 +156,6 @@ function draw() {
 
   }
 
-  //add text
-  fill(255); // color
-    textSize(36); 
-    textAlign(CENTER); // alignment
-    text("Welcome!", windowWidth/5, height / 4); // positioning
-    textSize(32);
-    text("How does this work?", windowWidth/5, height / 3.5);
-    text("1. Place your head fully inside the box", windowWidth/5, height / 3.2);
-    text("2. Answer the question by speaking freely", windowWidth/5, height / 3.0);
-    text("3. Continue until you are satisfied with your experience", windowWidth/5, height / 2.8);
-
-    textSize(36);
-    text("Use these voice commands to navigate the interface", windowWidth/5, height / 2.5);
-
-    textSize(32);
-    text("Say 'reset' to clear your answer and restart", windowWidth/5, height / 2.3);
-    text("Say 'submit' to submit your answer and view other answers", windowWidth/5, height / 2.1);
-    text("Say 'next' to move on to a new question", windowWidth/5, height / 1.8);
-
     
 }
 
@@ -380,8 +361,6 @@ function addCommentHandler() {
 
 function resetHandler() {
     toggleVibeState();
-    // navigate to next question
-    // window.location.href = 'q2.html';
     currentQuestionIndex = (currentQuestionIndex + 1) % initialQuestions.length;
     let currentQuestion = initialQuestions[currentQuestionIndex];
     smileQuestionSpan.html(currentQuestion);
@@ -452,23 +431,42 @@ function shuffle(array) {
 }
 
 // Speech recognized event3
+// Speech recognized event3
+console.log('gotSpeech function defined:');
 function gotSpeech() {
+    console.log('gotSpeech called');
     // Something is there
     // Get it as a string, you can also get JSON with more info
     if (speechRec.resultValue) {
-      let said = speechRec.resultString;
+        let said = speechRec.resultString;
 
-    if (said == 'reset') {
-        resetSmileQuestionSpeechInput();
-    } else if (said == 'submit') {
-        addCommentHandler();
-    } else if (said == 'next') {
-        handleNextCommand();
-    } else {
-        updateSmileQuestionSpeechInput(said);
-    }
+        console.log(`said: ${said}`);
+
+        if (said == 'reset') {
+            console.log('reset called');
+            resetSmileQuestionSpeechInput();
+            // reset timer for user activity
+            resetTimer();
+        } else if (said == 'submit') {
+            console.log('submit called');
+            addCommentHandler();
+            resetTimer();
+        } else if (said == 'next') {
+            console.log('next called');
+            handleNextCommand();
+            resetTimer();
+        } else if (said == 'start') {
+            console.log('start called');
+            // hide overlay  'start' is said
+            resetTimer();
+            hideOverlay();
+        } else {
+            console.log(`said: ${said}`);
+            updateSmileQuestionSpeechInput(said);
+        }
     }
 }
+
 
 function updateSmileQuestionSpeechInput(said) {
     current_input = document.getElementById('smileQuestionSpeechInput').innerHTML;
@@ -490,4 +488,69 @@ function handleNextCommand() {
     resetSmileQuestionSpeechInput();
     toggleVibeState();
 }
+
+// Set the timer for 10 minutes (600000 milliseconds)
+var timer = setTimeout(function() {
+    // Show the overlay
+    showOverlay();
+}, 600000);
+
+// Event listener for user activity
+function resetTimer() {
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+        // Show the overlay
+        showOverlay();
+    }, 600000);
+}
+
+// show instructions overlay
+function showOverlay() {
+    // Create the overlay element
+    var overlay = document.createElement('instructions');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+    overlay.style.zIndex = '9999';
+    overlay.style.display = 'flex';
+    overlay.style.alignItems = 'center';
+    overlay.style.justifyContent = 'center';
+
+    // Add content to the overlay
+    var content = document.createElement('instructions');
+    content.style.backgroundColor = '#FFF9F7';
+    content.style.padding = '30px';
+    content.style.borderRadius = '30px';
+    content.style.fontFamily = 'omnium-tagline';
+    content.style.fontSize = '30px';
+    content.style.color = 'dark grey';
+    content.innerHTML = 'Welcome, enter this realm of mirrors and begin your reflection experience here <br><br> Start by carefully placing your head inside the box and adjust your chair if needed <br> A question will appear on screen and you can answer it by speaking freely <br><br> You can navigate the interface with the following commands <br>*reset* = clear your answer <br>*submit = submit your answer <br>*next* = move to the next question<br><br> When you are ready, say *start* to begin.';
+
+    overlay.appendChild(content);
+
+    overlay.classList.add('overlay');
+
+   
+
+    // Append the overlay to the document body
+    document.body.appendChild(overlay);
+}
+
+// hide instructions overlay
+function hideOverlay() {
+    var overlay = document.querySelector('.overlay');
+    if (overlay) {
+        // Check if overlay exists before removing it
+        document.body.removeChild(overlay);
+    } else {
+        // Handle case where overlay does not exist
+        console.warn('No overlay element found to remove');
+    }
+}
+
+
+
 
