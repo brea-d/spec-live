@@ -174,6 +174,7 @@ function draw() {
     text("Say 'reset' to clear your answer and restart", windowWidth/5, height / 2.3);
     text("Say 'submit' to submit your answer and view other answers", windowWidth/5, height / 2.1);
     text("Say 'next' to move on to a new question", windowWidth/5, height / 1.8);
+
     
 }
 
@@ -209,7 +210,12 @@ function goodVibes() {
     document.getElementById('smileQuestionSpan').style.display = 'none';
     document.getElementById('smileQuestionSpeechInput').style.display = 'none';
 
-    image(video, videoX, videoY);
+  //mirror the video capture
+  push();
+  translate(width,0);
+  scale(-1, 1);
+  image(video, videoX, videoY);
+  pop();
 }
 
 // Before answering what made one smile - greyscale
@@ -229,7 +235,13 @@ function badVibes() {
     // document.getElementById('resetButton').style.display = 'none';
     document.getElementById('lastQuestionAnswerFieldHeader').style.display = 'none';
 
-    image(video, videoX, videoY);
+//mirror the video capture
+  push();
+  translate(width,0);
+  scale(-1, 1);
+  image(video, videoX, videoY);
+  pop();
+    
 }
 
 //webcam
@@ -242,7 +254,9 @@ function setupVideo() {
 
     videoX = (windowWidth - video.width) / 2;
     videoY = (windowHeight - video.height) / 2;
+    
 
+    
     // css to center video responsively
     video.style('position', 'absolute');
     video.style('left', '50%');
