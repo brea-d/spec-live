@@ -87,6 +87,14 @@ let smileQuestionAnswers = [
 ];
 let currentQuestionIndex = 0; // Keeps track of the current question index
 
+
+
+function preload() {
+    // Load the custom image
+    customImage = loadImage('assets/bg-test-1.png');
+
+}
+
 function setup() {
     canvas = createCanvas(windowWidth, windowHeight);
 
@@ -178,20 +186,18 @@ function draw() {
 // After answering what made one smile
 function goodVibes() {
 
-    background(255);
-    canvas.class(''); // remove greyscale class
+    // //remove canvas
+    // noCanvas();
+
+    background(customImage);
+
+        canvas.class(''); // remove greyscale class
 
     // Remove canvas
     canvas.style.display = 'none';
 
-
-    // Add video background
-    document.getElementById('sketch-holder').style.background = 'transparent'; // Make the sketch-holder background transparent
-    document.getElementById('background-video').style.display = 'block'; // Display the video element
     
-    // // custom bg image
-    // document.getElementById('sketch-holder').style.backgroundImage ="url(assets/bg-test-1.png)";
-    // document.getElementById('sketch-holder').style.backgroundSize = "cover";
+
 
     document.getElementById('smileQuestionAnswersField').style.display = 'block';
     document.getElementById('smileQuestionAnswersFieldHeader').style.display = 'block';
@@ -237,9 +243,11 @@ function setupVideo() {
     videoX = (windowWidth - video.width) / 2;
     videoY = (windowHeight - video.height) / 2;
 
-    // Center for ipad pro
-    videoX = (1024 - video.width) / 2; // width ipad pro
-    videoY = (1366 - video.height) / 2; // height ipad pro
+    // css to center video responsively
+    video.style('position', 'absolute');
+    video.style('left', '50%');
+    video.style('top', '50%');
+    video.style('transform', 'translate(-50%, -50%)');
 }
 
 // function setupCommentButton() {
@@ -263,11 +271,15 @@ function setupVideo() {
 // }
 
 function setupSmileQuestionSpan() {
-    // Question above add comment button - cycles through array
+    // Question - cycles through array
     smileQuestionSpan = createSpan(initialQuestions[currentQuestionIndex].question);
-    smileQuestionSpanX = videoX/2;
-    smileQuestionSpanY = windowHeight - videoY + 60;
+    smileQuestionSpanX = (windowWidth - smileQuestionSpan.width) / 2;
+    smileQuestionSpanY = (windowHeight - smileQuestionSpan.height) / 2 + (videoY);
     smileQuestionSpan.position(smileQuestionSpanX, smileQuestionSpanY);
+
+    // align to middle
+    smileQuestionSpan.style('display', 'block');
+    smileQuestionSpan.style('margin', 'auto');
     smileQuestionSpan.id("smileQuestionSpan");
   }
 
