@@ -8,6 +8,9 @@ let videoY;
 // let resetButtonX;
 // let resetButtonY;
 
+let overlaySpanX;
+let overlaySpanY;
+
 let smileQuestionSpanX;
 let smileQuestionSpanY;
 let smileQuestionSpeechInputX;
@@ -27,11 +30,6 @@ let smileQuestionAnswersFieldCounter = 0;
 let vibeState = false; // "false" means we start with bad vibes
 
 let fadeSmileQuestionAnswersFieldInAndOutInterval;
-
-// "Continuous recognition" (as opposed to one time only)
-let continuous = true;
-// If you want to try partial recognition (faster, less accurate)
-let interimResults = false;
 
 let speechRec;
 
@@ -87,6 +85,13 @@ let smileQuestionAnswers = [
 ];
 let currentQuestionIndex = 0; // Keeps track of the current question index
 
+function speechRecEnded() {
+    console.log('speechRecEnded called');
+}
+
+function speechRecError() {
+    console.log('speechRecError called');
+}
 
 
 function preload() {
@@ -104,19 +109,24 @@ function setup() {
     setupVideo();
     // setupCommentButton();
     // setupResetButton();
+
+    // https://editor.p5js.org/dano/sketches/T-XASCOsa
+    // https://idmnyu.github.io/p5.js-speech/#examples
+    speechRec = new p5.SpeechRec('en-US');
+    // "continous mode" can't keep web (browser-)speech API alive. So we're restarting it manually in "gotEnd()"
+    speechRec.continuous = false;
+    speechRec.onResult = gotSpeech;
+    speechRec.onEnd = gotEnd;
+    speechRec.start();
+
+    setupOverlay();
+    setupNextOverlay();
     setupSmileQuestionSpan();
     setupSmileQuestionSpeechInput();
     setupSmileQuestionAnswersFieldHeader();
     setupSmileQuestionAnswersField();
     setupLastQuestionAnswerFieldHeader();
     setupLastQuestionAnswerField();
-
-    // https://editor.p5js.org/dano/sketches/T-XASCOsa
-    // Create a Speech Recognition object with callback
-    speechRec = new p5.SpeechRec('en-US', gotSpeech);
-
-    // This must come after setting the properties
-    speechRec.start(continuous, interimResults);
 }
 
 //function draw() {
@@ -146,17 +156,11 @@ function setup() {
 // }
 
 function draw() {
-  if (vibeState == true) {
-      goodVibes();
-  } else {
-      badVibes();
-      
-      
-    
-
-  }
-
-    
+    if (vibeState == true) {
+        goodVibes();
+    } else {
+        badVibes();
+    }
 }
 
 
@@ -177,10 +181,7 @@ function goodVibes() {
     // Remove canvas
     canvas.style.display = 'none';
 
-    
-
-
-
+    document.getElementById('nextOverlaySpan').style.display = 'block';
     document.getElementById('smileQuestionAnswersField').style.display = 'block';
     document.getElementById('smileQuestionAnswersFieldHeader').style.display = 'block';
     // document.getElementById('resetButton').style.display = 'block';
@@ -188,6 +189,7 @@ function goodVibes() {
     document.getElementById('lastQuestionAnswerField').style.display = 'block';
 
     // document.getElementById('addCommentButton').style.display = 'none';
+    document.getElementById('overlaySpan').style.display = 'none';
     document.getElementById('smileQuestionSpan').style.display = 'none';
     document.getElementById('smileQuestionSpeechInput').style.display = 'none';
 
@@ -207,10 +209,12 @@ function badVibes() {
 
 
     // document.getElementById('addCommentButton').style.display = 'block';
+    document.getElementById('overlaySpan').style.display = 'block';
     document.getElementById('smileQuestionSpan').style.display = 'block';
     document.getElementById('smileQuestionSpeechInput').style.display = 'block';
 
     document.getElementById('smileQuestionAnswersField').style.display = 'none';
+    document.getElementById('nextOverlaySpan').style.display = 'none';
     document.getElementById('smileQuestionAnswersFieldHeader').style.display = 'none';
     document.getElementById('lastQuestionAnswerField').style.display = 'none';
     // document.getElementById('resetButton').style.display = 'none';
@@ -245,11 +249,26 @@ function setupVideo() {
     video.style('transform', 'translate(-50%, -50%)');
 }
 
+function setupOverlay() {
+    overlaySpan = createSpan("Stark speaking to answer the question below. <br> Say 'reset' to clear your answer, <br> and 'submit' to submit your answer.");
+    overlaySpanX = (windowWidth - overlaySpan.width) / 2;
+    overlaySpanY = videoY + video.height - 600; // Move the overlay above the video
+    overlaySpan.position(overlaySpanX, overlaySpanY);
+    overlaySpan.id('overlaySpan');
+}
+
+function setupNextOverlay() {
+    nextOverlaySpan = createSpan("Say 'next' to move to the next question.");
+    nextOverlaySpanX = (windowWidth - nextOverlaySpan.width) / 2;
+    nextOverlaySpanY = videoY + video.height - 500; // Move the overlay above the video
+    nextOverlaySpan.position(nextOverlaySpanX, nextOverlaySpanY);
+    nextOverlaySpan.id('nextOverlaySpan');
+}
 
 function setupSmileQuestionSpan() {
     // Question - cycles through array
     smileQuestionSpan = createSpan(initialQuestions[currentQuestionIndex].question);
-    smileQuestionSpanX = (windowWidth - smileQuestionSpan.width) / 2;
+    smileQuestionSpanX = ((windowWidth - smileQuestionSpan.width) / 2) - 100;
     smileQuestionSpanY = videoY + video.height + 20; // 20 pixels below the video
 
     smileQuestionSpan.position(smileQuestionSpanX, smileQuestionSpanY);
@@ -269,7 +288,7 @@ function setupSmileQuestionSpeechInput() {
     // Answer input field next to question
     smileQuestionSpeechInput = createSpan("");
     smileQuestionSpeechInputX = smileQuestionSpanX + 40;
-    smileQuestionSpeechInputY = smileQuestionSpanY + 40;
+    smileQuestionSpeechInputY = smileQuestionSpanY + 100; // push it a bit lower
     smileQuestionSpeechInput.position(smileQuestionSpeechInputX, smileQuestionSpeechInputY);
     smileQuestionSpeechInput.id('smileQuestionSpeechInput');
     textAlign(CENTER);
@@ -292,11 +311,6 @@ function setupSmileQuestionAnswersField() {
     smileQuestionAnswersFieldY = smileQuestionAnswersFieldHeaderY + 30;
     smileQuestionAnswersField.position(smileQuestionAnswersFieldX, smileQuestionAnswersFieldY);
     smileQuestionAnswersField.id('smileQuestionAnswersField');
-}
-
-//show answer depending on the question displayed 
-function showSmileQuestionAnswersCorresponding() {
-
 }
 
 function setupLastQuestionAnswerFieldHeader() {
@@ -446,20 +460,20 @@ function gotSpeech() {
             console.log('reset called');
             resetSmileQuestionSpeechInput();
             // reset timer for user activity
-            resetTimer();
+            // resetTimer();
         } else if (said == 'submit') {
             console.log('submit called');
             addCommentHandler();
-            resetTimer();
+            // resetTimer();
         } else if (said == 'next') {
             console.log('next called');
             handleNextCommand();
-            resetTimer();
-        } else if (said == 'start') {
-            console.log('start called');
-            // hide overlay  'start' is said
-            resetTimer();
-            hideOverlay();
+            // resetTimer();
+        //} else if (said == 'start') {
+        //    console.log('start called');
+        //    // hide overlay  'start' is said
+        //    // resetTimer();
+        //    hideOverlay();
         } else {
             console.log(`said: ${said}`);
             updateSmileQuestionSpeechInput(said);
@@ -467,6 +481,11 @@ function gotSpeech() {
     }
 }
 
+function gotEnd() {
+    console.log("Speech rec ended. Restarting...");
+    // Restart immediately
+    speechRec.start();
+}
 
 function updateSmileQuestionSpeechInput(said) {
     current_input = document.getElementById('smileQuestionSpeechInput').innerHTML;
@@ -490,19 +509,19 @@ function handleNextCommand() {
 }
 
 // Set the timer for 10 minutes (600000 milliseconds)
-var timer = setTimeout(function() {
-    // Show the overlay
-    showOverlay();
-}, 600000);
-
-// Event listener for user activity
-function resetTimer() {
-    clearTimeout(timer);
-    timer = setTimeout(function() {
-        // Show the overlay
-        showOverlay();
-    }, 600000);
-}
+// var timer = setTimeout(function() {
+//     // Show the overlay
+//     showOverlay();
+// }, 600000);
+// 
+// // Event listener for user activity
+// function resetTimer() {
+//     clearTimeout(timer);
+//     timer = setTimeout(function() {
+//         // Show the overlay
+//         showOverlay();
+//     }, 600000);
+// }
 
 // show instructions overlay
 function showOverlay() {

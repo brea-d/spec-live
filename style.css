@@ -30,6 +30,17 @@
     text-wrap: balance;
 }
 
+#overlaySpan {
+  color: #ffffff;
+    font-family: omnium-tagline, sans-serif;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 1.5em;
+    text-shadow: 1px 2px 2px rgb(153, 101, 153);
+    text-align: center;
+    text-wrap: balance;
+}
+
 #smileQuestionSpeechInput {
   font-family: "locator-web", sans-serif;
   font-weight: 400;
@@ -53,7 +64,7 @@
     
 }
 
-#smileQuestionAnswersField {
+#smileQuestionAnswersField, #nextOverlaySpan {
     color: rgb(16, 40, 32);
     font-family: "locator-web", sans-serif;
     font-weight: 400;
