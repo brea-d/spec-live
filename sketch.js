@@ -252,7 +252,7 @@ function setupVideo() {
 function setupOverlay() {
     overlaySpan = createSpan("Stark speaking to answer the question below. <br> Say 'reset' to clear your answer, <br> and 'enter' to submit your answer.");
     overlaySpanX = (windowWidth - overlaySpan.width) / 2;
-    overlaySpanY = videoY + video.height - 600; // Move the overlay above the video
+    overlaySpanY = videoY + video.height - 500; // Move the overlay above the video
     overlaySpan.position(overlaySpanX, overlaySpanY);
     overlaySpan.id('overlaySpan');
 }
