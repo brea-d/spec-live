@@ -250,9 +250,15 @@ function setupVideo() {
 }
 
 function setupOverlay() {
+<<<<<<< HEAD
     overlaySpan = createSpan("Stark speaking to answer the question below. <br> Say 'reset' to clear your answer, <br> and 'enter' to submit your answer.");
     overlaySpanX = (windowWidth - overlaySpan.width) / 2;
     overlaySpanY = videoY + video.height - 400; // Move the overlay above the video
+=======
+    overlaySpan = createSpan("Stark speaking to answer the question below. <br> Say 'reset' to clear your answer, <br> and 'submit' to submit your answer.");
+    overlaySpanX = (windowWidth - overlaySpan.width) / 2;
+    overlaySpanY = videoY + video.height - 600; // Move the overlay above the video
+>>>>>>> e53b77eaa66cbcd8af02167874daa1225cc66de6
     overlaySpan.position(overlaySpanX, overlaySpanY);
     overlaySpan.id('overlaySpan');
 }
@@ -461,8 +467,13 @@ function gotSpeech() {
             resetSmileQuestionSpeechInput();
             // reset timer for user activity
             // resetTimer();
+<<<<<<< HEAD
         } else if (said == 'enter') {
             console.log('enter called');
+=======
+        } else if (said == 'submit') {
+            console.log('submit called');
+>>>>>>> e53b77eaa66cbcd8af02167874daa1225cc66de6
             addCommentHandler();
             // resetTimer();
         } else if (said == 'next') {
