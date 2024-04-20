@@ -250,7 +250,7 @@ function setupVideo() {
 }
 
 function setupOverlay() {
-    overlaySpan = createSpan("Stark speaking to answer the question below. <br> Say 'reset' to clear your answer, <br> and 'submit' to submit your answer.");
+    overlaySpan = createSpan("Stark speaking to answer the question below. <br> Say 'reset' to clear your answer, <br> and 'enter' to submit your answer.");
     overlaySpanX = (windowWidth - overlaySpan.width) / 2;
     overlaySpanY = videoY + video.height - 600; // Move the overlay above the video
     overlaySpan.position(overlaySpanX, overlaySpanY);
@@ -461,8 +461,8 @@ function gotSpeech() {
             resetSmileQuestionSpeechInput();
             // reset timer for user activity
             // resetTimer();
-        } else if (said == 'submit') {
-            console.log('submit called');
+        } else if (said == 'enter') {
+            console.log('enter called');
             addCommentHandler();
             // resetTimer();
         } else if (said == 'next') {
@@ -546,7 +546,7 @@ function showOverlay() {
     content.style.fontFamily = 'omnium-tagline';
     content.style.fontSize = '30px';
     content.style.color = 'dark grey';
-    content.innerHTML = 'Welcome, enter this realm of mirrors and begin your reflection experience here <br><br> Start by carefully placing your head inside the box and adjust your chair if needed <br> A question will appear on screen and you can answer it by speaking freely <br><br> You can navigate the interface with the following commands <br>*reset* = clear your answer <br>*submit = submit your answer <br>*next* = move to the next question<br><br> When you are ready, say *start* to begin.';
+    content.innerHTML = 'Welcome, enter this realm of mirrors and begin your reflection experience here <br><br> Start by carefully placing your head inside the box and adjust your chair if needed <br> A question will appear on screen and you can answer it by speaking freely <br><br> You can navigate the interface with the following commands <br>*reset* = clear your answer <br>*enter = submit your answer <br>*next* = move to the next question<br><br> When you are ready, say *start* to begin.';
 
     overlay.appendChild(content);
 
